@@ -12,12 +12,11 @@ class Server(Bluetooth):
 
 
 		self.listOfPeople = {} # Address -> Name hash table
-		self.tmpListOfPeople = []
 
 		self.socket.bind(("54:35:30:D4:11:AE",self.port))
 
 		#Create and run thread to accept connections
-		self.accConTh = AcceptingConnectionThread(self.socket, self.tmpListOfPeople)
+		self.accConTh = AcceptingConnectionThread(self.socket, self.listOfPeople)
 		self.accConTh.start()
 
 		#Create and run thread to receive data
