@@ -18,6 +18,7 @@ class AcceptingConnectionThread(threading.Thread):
 			self.tmpListOfPeople.append((clientSocket,address))
 			data = clientSocket.recv(1024)
 			print (data)
+			data = json.loads(data)
 			if data["IsHandshake"] == True:
 				print "ITS A HANDSHAKE MOTHERFUCKER"
 				tmp = json.loads(data)
