@@ -20,6 +20,8 @@ class AcceptingConnectionThread(threading.Thread):
 			print (data)
 			if data["IsHandshake"] == True:
 				print "ITS A HANDSHAKE MOTHERFUCKER"
+				tmp = json.loads(data)
+				print tmp
 			break
 		clientSocket.close()
 		self.socket.close()
