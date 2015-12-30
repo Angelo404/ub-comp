@@ -7,7 +7,8 @@ class Bluetooth(object):
 		self.ownName = "Angelo-UB"
 		self.ownAddress = None
 		self.socket = bluetooth.BluetoothSocket( bluetooth.RFCOMM )
-		self.port = None
+		self.port = 5
+
 
 	def Scan(self):
 		"""

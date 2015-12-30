@@ -1,28 +1,39 @@
 
 import bluetooth
 from Bluetooth import Bluetooth
+from AcceptingConnectionThread import AcceptingConnectionThread
+from RcvDataThread import RcvDataThread
 
 class Server(Bluetooth):
 
 	def __init__(self):
 		super(self.__class__, self).__init__()
 
-		print self.Scan()
 
-		self.port = 3
-		self.socket.bind(("01:23:45:67:89:ab",self.port))
-		self.socket.listen(1)
-		
-		self.clientSocket,address = self.socket.accept()
 
-		print "Accepted connection from ",address
+		self.listOfPeople = {} # Address -> Name hash table
+		self.tmpListOfPeople = []
 
-		data = self.clientSocket.recv(1024)
-		print "received [%s]" % data
+		self.socket.bind(("54:35:30:D4:11:AE",self.port))
 
-		self.TerminateConnection()
+		#Create and run thread to accept connections
+		self.accConTh = AcceptingConnectionThread(self.socket, self.tmpListOfPeople)
+		self.accConTh.start()
+
+		#Create and run thread to receive data
+		#self.rcvDataTh = RcvDataThread(self.socket, self.tmpListOfPeople)
+		#self.rcvDataTh.start()
+
+		#print "Accepted connection from ",address
+		#print str(bluetooth.lookup_name(address[0], 10))
+
+		#data = self.clientSocket.recv(1024)
+		#print "received [%s]" % data
+
+		#self.TerminateConnection()
 		
 	def TerminateConnection(self):
+		self.accConTh.join()
 		self.clientSocket.close()
 		self.socket.close()
 
