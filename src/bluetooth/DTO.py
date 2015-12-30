@@ -18,7 +18,7 @@ class DTO():
 			"HeartBeatFlag": self.HeartBeatFlag,
 			"IsLightOn": self.IsLightOn,
 			"IsHandshake": self.IsHandshake,
-			"Password": "WeAreAllMadHere"
+			"Password": "WeAreAllMadHere",
 			"Data": self.Data
 		}
 		return json.dumps(self.Pckg)
