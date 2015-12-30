@@ -18,9 +18,11 @@ class AcceptingConnectionThread(threading.Thread):
 			self.tmpListOfPeople.append((clientSocket,address))
 			data = clientSocket.recv(1024)
 			print (data)
+			if data["IsHandshake"] == True:
+				print "ITS A HANDSHAKE MOTHERFUCKER"
 			break
-			clientSocket.close()
-			self.socket.close()
+		clientSocket.close()
+		self.socket.close()
 
 	def terminateThread(self):
 		exit()
