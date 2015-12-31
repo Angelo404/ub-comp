@@ -22,6 +22,9 @@ class Client(Bluetooth):
 			tmpDTO = DTO(False, False, False, False, "testing " + str(i))
 			self.socket.send(tmpDTO.createPckg())
 
+		terminateDTO = DTO(True, False, False, False, "ending")
+		self.socket.send(terminateDTO.createPckg())
+
 		self.socket.close()
 
 if __name__ == "__main__":
