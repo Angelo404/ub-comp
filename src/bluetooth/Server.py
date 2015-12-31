@@ -74,8 +74,8 @@ class Server(Bluetooth):
 
 			#Check if its a trusting device
 			if data["IsHandshake"] == True and self.authentication(data):
-				
 				break
+				
 		rcvDataTh.start()
 		rcvDataTh.join()
 

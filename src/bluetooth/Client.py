@@ -24,9 +24,7 @@ class Client(Bluetooth):
 		while self.runningFlag:
 		
 			self.socket.send(DTO(False, False, False, False, "testing").createPckg())
-			time.sleep(1)
 			self.socket.send(DTO(True, False, False, False, "terminting").createPckg())
-			time.sleep(5)
 			
 			self.runningFlag = False
 
