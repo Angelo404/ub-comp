@@ -1,20 +1,41 @@
 
 import bluetooth
 from Bluetooth import Bluetooth
+from DTO import DTO
+import time
 
 class Client(Bluetooth):
 
 	def __init__(self):
 		super(self.__class__, self).__init__()
 
-		self.bd_addr = "01:23:45:67:89:ab"
+		self.serverAddr = "54:35:30:D4:11:AE"
 
-		self.port = 3
+		#self.socket.connect((self.serverAddr, self.port))
+		'''
+		handShakeDTO = DTO(False, False, False, True, "testing")
 
-		self.socket.connect((self.bd_addr, self.port))
+		self.socket.send(handShakeDTO.createPckg())
+		
+		for i in range(10):
+			time.sleep(1)
 
-		self.socket.send("hello!!")
+			bluetooth.advertise_service(self.socket,"laptop")
+		'''
+		d = bluetooth.DeviceDiscoverer()
+		print d.find_devices()
 
+
+
+		print bluetooth.discover_devices(lookup_names = True)
+		"""
+			time.sleep(1)
+			tmpDTO = DTO(False, False, False, False, "testing " + str(i))
+			self.socket.send(tmpDTO.createPckg())
+
+		terminateDTO = DTO(True, False, False, False, "ending")
+		self.socket.send(terminateDTO.createPckg())
+		"""
 		self.socket.close()
 
 if __name__ == "__main__":
