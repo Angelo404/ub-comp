@@ -7,26 +7,60 @@ import time
 
 class Server(Bluetooth):
 
-	def __init__(self):
+	def __init__(self, mode):
 		super(self.__class__, self).__init__()
 
 		#Address -> Name hash table
 		self.listOfPeople = {}
+		#Loads the known users
+		self.loadKnownPeople()
 		#Bind the socket
 		self.socket.bind(("54:35:30:D4:11:AE",self.port))
 		#Password for the trusting devices.
 		self.password = "WeAreAllMadHere"
-		self.socket.listen(1)
-		uuid = "1e0ca4ea-299d-4335-93eb-27fcfe7fa848"
-		for i in range(20):
-			time.sleep(1)
-			bluetooth.advertise_service(self.socket, "laptop", uuid)
+
+		#Choose between just scanning or establishing connection.
+		if mode == "scanning":
+			self.scanningMode()
+		elif mode == "connecting":
+			self.connectionMode()
+
+		self.socket.close()
+
+
+	def scanningMode(self):
 		"""
+		Enter scanning mode.
+		"""
+		for i in range(1):
+			#Scan for devices in the surrounding area.
+			listOfDevicesPresent = bluetooth.discover_devices(lookup_names = True)
+			self.isDeviceKnown(listOfDevicesPresent)
+			time.sleep(2)
+
+	def isDeviceKnown(self, listOfDevicesPresent):
+		"""
+		This will check if the devices in range are known devices.
+		"""
+		for person in listOfDevicesPresent:
+			if person[0] in self.listOfPeople:
+				print "FOUND" #TO DO
+
+	def loadKnownPeople(self):
+		"""
+		This will load the json file that contains all the registered users. 
+		"""
+		with open('usersTable.json') as usersTable:    
+			self.listOfPeople = json.load(usersTable)
+
+	def connectionMode(self):
 		while True:
 
 			#Accept connections and recieve the very first package
 			self.socket.listen(1)
+			#Accept the connection
 			clientSocket,address = self.socket.accept()
+			
 			data = clientSocket.recv(1024)
 
 			#debug line
@@ -49,8 +83,6 @@ class Server(Bluetooth):
 				continue
 
 		rcvDataTh.join()
-		"""
-		self.socket.close()
 
 	def authentication(self, data):
 		"""
@@ -61,4 +93,4 @@ class Server(Bluetooth):
 		return False
 
 if __name__ == "__main__":
-	Server()
+	Server("scanning") #Modes -> scanning/connecting
