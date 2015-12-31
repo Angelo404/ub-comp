@@ -2,6 +2,7 @@
 import bluetooth
 from Bluetooth import Bluetooth
 from DTO import DTO
+import time
 
 class Client(Bluetooth):
 
