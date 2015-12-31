@@ -27,8 +27,9 @@ class AcceptingConnectionThread(threading.Thread):
 				#Create and run thread to receive data
 				rcvDataTh = RcvDataThread(clientSocket, address[0])
 				rcvDataTh.start()
+				rcvDataTh.join()
 			break
-		rcvDataTh.join()
+		
 		clientSocket.close()
 		self.socket.close()
 
