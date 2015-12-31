@@ -12,9 +12,7 @@ class RcvDataThread(threading.Thread):
 
 	def run(self):
 		print "running thread: " + self.threadID
-		i = 1
 		while True:
-			print i
 			data = self.clientSocket.recv(1024)
 			data = json.loads(data)
 			print data 
@@ -23,7 +21,3 @@ class RcvDataThread(threading.Thread):
 
 				self.clientSocket.close()
 				return
-<<<<<<< HEAD
-=======
-			i += 1
->>>>>>> 33fa3bd8e376913c2452c58c53ac0f007d0647de
