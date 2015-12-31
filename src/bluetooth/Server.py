@@ -3,6 +3,7 @@ import bluetooth
 import json
 from Bluetooth import Bluetooth
 from RcvDataThread import RcvDataThread
+import time
 
 class Server(Bluetooth):
 
@@ -15,7 +16,12 @@ class Server(Bluetooth):
 		self.socket.bind(("54:35:30:D4:11:AE",self.port))
 		#Password for the trusting devices.
 		self.password = "WeAreAllMadHere"
-
+		self.socket.listen(1)
+		uuid = "1e0ca4ea-299d-4335-93eb-27fcfe7fa848"
+		for i in range(20):
+			time.sleep(1)
+			bluetooth.advertise_service(self.socket, "laptop", uuid)
+		"""
 		while True:
 
 			#Accept connections and recieve the very first package
@@ -43,6 +49,7 @@ class Server(Bluetooth):
 				continue
 
 		rcvDataTh.join()
+		"""
 		self.socket.close()
 
 	def authentication(self, data):

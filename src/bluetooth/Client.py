@@ -22,6 +22,11 @@ class Client(Bluetooth):
 
 			bluetooth.advertise_service(self.socket,"laptop")
 		'''
+		d = bluetooth.DeviceDiscoverer()
+		print d.find_devices()
+
+
+
 		print bluetooth.discover_devices(lookup_names = True)
 		"""
 			time.sleep(1)
