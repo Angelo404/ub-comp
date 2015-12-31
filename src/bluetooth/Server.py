@@ -69,19 +69,14 @@ class Server(Bluetooth):
 			#Parse data into something readable
 			data = json.loads(data)
 
+			#Create and run thread to receive data
+			rcvDataTh = RcvDataThread(clientSocket, address[0])
+
 			#Check if its a trusting device
 			if data["IsHandshake"] == True and self.authentication(data):
-				#add the device name and address to the hash table
-				self.listOfPeople[str(bluetooth.lookup_name(address[0], 10))] = address[0]
-
-				#Create and run thread to receive data
-				rcvDataTh = RcvDataThread(clientSocket, address[0])
-				rcvDataTh.start()
+				
 				break
-			else:
-				clientSocket.close()
-				continue
-
+		rcvDataTh.start()
 		rcvDataTh.join()
 
 	def authentication(self, data):
@@ -93,5 +88,9 @@ class Server(Bluetooth):
 		return False
 
 if __name__ == "__main__":
+<<<<<<< HEAD
 
 	Server("scanning") #Modes -> scanning/connecting
+=======
+	Server("connecting") #Modes -> scanning/connecting
+>>>>>>> 33fa3bd8e376913c2452c58c53ac0f007d0647de
