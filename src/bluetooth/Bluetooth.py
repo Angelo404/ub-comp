@@ -4,10 +4,9 @@ import bluetooth
 class Bluetooth(object):
 
 	def __init__(self):
-		self.ownName = "Angelo-UB"
 		self.ownAddress = None
 		self.socket = bluetooth.BluetoothSocket( bluetooth.RFCOMM )
-		self.port = 10
+		self.port = 2
 
 	def Scan(self):
 		"""
