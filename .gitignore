@@ -1,2 +1,7 @@
 venv/*
 VirtEnv/
+*tmp*
+.*
+!/.gitignore
+*.config
+*.key
