@@ -20,6 +20,10 @@ class RcvDataThread(threading.Thread):
 			print data 
 			if data["TerminateFlag"] == True:
 				print "WE ARE NOW EXITING"
+
 				self.clientSocket.close()
 				return
+<<<<<<< HEAD
+=======
 			i += 1
+>>>>>>> 33fa3bd8e376913c2452c58c53ac0f007d0647de

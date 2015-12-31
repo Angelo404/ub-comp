@@ -88,4 +88,9 @@ class Server(Bluetooth):
 		return False
 
 if __name__ == "__main__":
+<<<<<<< HEAD
+
+	Server("scanning") #Modes -> scanning/connecting
+=======
 	Server("connecting") #Modes -> scanning/connecting
+>>>>>>> 33fa3bd8e376913c2452c58c53ac0f007d0647de
