@@ -57,12 +57,5 @@ class SpotifyPlayer(object):
         self.session.player.load(track)
         self.session.player.play()
 
-        # Wait for playback to complete or Ctrl+C
-        # try:
-        #     while not self.end_of_track.wait(0.1):
-        #         pass
-        # except KeyboardInterrupt:
-        #     pass
-
     def isPlaying(self):
 	return self.session.player.state == 'playing'
