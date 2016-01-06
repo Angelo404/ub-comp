@@ -1,0 +1,4 @@
+[Database]
+location: /path/to/sqlite.db
+username: username
+password: password
