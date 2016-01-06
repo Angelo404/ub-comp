@@ -15,8 +15,9 @@ class RcvDataThread(threading.Thread):
 		while True:
 			data = self.clientSocket.recv(1024)
 			data = json.loads(data)
-			print data
+			print data 
 			if data["TerminateFlag"] == True:
 				print "WE ARE NOW EXITING"
+
 				self.clientSocket.close()
 				return

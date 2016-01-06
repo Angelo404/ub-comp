@@ -5,38 +5,34 @@ from DTO import DTO
 import time
 
 class Client(Bluetooth):
-
+	"""
+	ONLY USED IN CONNECTION MODE
+	"""
 	def __init__(self):
 		super(self.__class__, self).__init__()
 
+		#Declare server's address
 		self.serverAddr = "54:35:30:D4:11:AE"
+		#Bind the socket
+		self.socket.connect((self.serverAddr, self.port))
+		#Flag to keep running
+		self.runningFlag = True
 
-		#self.socket.connect((self.serverAddr, self.port))
-		'''
-		handShakeDTO = DTO(False, False, False, True, "testing")
+		#Send handshake package
+		self.socket.send(DTO(False, False, False, True, "init packg").createPckg())
 
-		self.socket.send(handShakeDTO.createPckg())
+		while self.runningFlag:
 		
-		for i in range(10):
-			time.sleep(1)
-
-			bluetooth.advertise_service(self.socket,"laptop")
-		'''
-		d = bluetooth.DeviceDiscoverer()
-		print d.find_devices()
+			self.socket.send(DTO(False, False, False, False, "testing").createPckg())
+			self.socket.send(DTO(True, False, False, False, "terminting").createPckg())
+			
+			self.runningFlag = False
 
 
-
-		print bluetooth.discover_devices(lookup_names = True)
-		"""
-			time.sleep(1)
-			tmpDTO = DTO(False, False, False, False, "testing " + str(i))
-			self.socket.send(tmpDTO.createPckg())
-
-		terminateDTO = DTO(True, False, False, False, "ending")
-		self.socket.send(terminateDTO.createPckg())
-		"""
 		self.socket.close()
+
+
+
 
 if __name__ == "__main__":
 	Client()
