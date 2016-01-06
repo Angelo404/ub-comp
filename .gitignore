@@ -5,3 +5,4 @@ VirtEnv/
 !/.gitignore
 *.config
 *.key
+*.db
