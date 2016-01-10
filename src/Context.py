@@ -18,6 +18,7 @@ class Context:
         self.printContext()
 
     def onContextChanged(self, key, value):
+        # Do actions based on the changed context
         pass
 
     def printContext(self):
