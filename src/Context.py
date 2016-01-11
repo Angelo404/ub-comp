@@ -1,4 +1,6 @@
+import os
 import threading
+import pygame
 
 
 class Context:
@@ -17,9 +19,12 @@ class Context:
         self.onContextChanged(key, value)
         self.printContext()
 
+    def playSound(self):
+        os.system("aplay /home/pi/police_s.wav")
+
     def onContextChanged(self, key, value):
-        # Do actions based on the changed context
-        pass
+        if "Door" in key and value == "Open":
+            self.playSound()
 
     def printContext(self):
         print "State: {}".format(self.state)
