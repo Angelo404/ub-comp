@@ -52,7 +52,6 @@ class SpotifyPlayer(object):
 
     # Play a track
     def play_track(self, track_uri):
-    	print self.username + self.password
         track = self.session.get_track(track_uri).load()
         self.session.player.load(track)
         self.session.player.play()

@@ -33,32 +33,41 @@ class Alarm(object):
 	    cur.close()
 	    return (rv[0] if rv else None) if one else rv
 
-	def playTrack(track_uri):
+	def playtrack(self):
+		play_track('spotify:track:0HJRAM7Gt9jXskuXjZeFX3')
+
+	def play_track(self, track_uri):
 		spotify.play_track(track_uri)
 
+# Because calling this directly on the object does not work for some magic reason
+def play_track(track_uri):
+	alarm.spotify.play_track(track_uri)
 
+track_uri = 'spotify:track:0HJRAM7Gt9jXskuXjZeFX3'
 alarm = Alarm()
+
 # c = db.cursor()
 # result = c.execute('''SELECT * FROM alarm WHERE repeat > 0 OR time > date('now')''')
 # query = 'SELECT * FROM alarm'
 # print query
 # c.execute(query)
 # result = c.fetchall()
-res = alarm.alarms
-for row in res:
-	print row['user']
+# res = alarm.alarms
+# for row in res:
+	# print row['user']
+
 
 # Short test to see if Spotify is working in combination with Timer
-# t = Timer(1.0, playTrack, [track_uri])
+t = Timer(1.0, play_track, [track_uri])
 # Alarms.append(t)
-# t.start()
-# time.sleep(10)
+t.start()
+time.sleep(10)
 # print spotify.isPlaying()
 # print Alarms
 
 # Busy wait for spotify
-# try:
-#     while spotify.isPlaying():
-#         pass
-# except KeyboardInterrupt:
-#     pass
+try:
+    while alarm.spotify.isPlaying():
+        pass
+except KeyboardInterrupt:
+    pass

@@ -6,3 +6,4 @@ VirtEnv/
 *.config
 *.key
 *.db
+*.pyc
