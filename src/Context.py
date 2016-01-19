@@ -36,8 +36,16 @@ class Context:
     def onDoorOpened(self):
         lightOn = self.state["Actuators:Lights:Desk"] == "on"
         sun_is_shining = self.sunRised()
-        if not lightOn and not sun_is_shining:
+        if not lightOn and not sun_is_shining and self.number_of_persons_in_room() > 0:
             self.enable_light()
+
+    def number_of_persons_in_room(self):
+        persons = 0
+        for key in self.state.keys():
+            if "Sensors:Devices:" in key:
+                if self.state[key] == "present":
+                    persons += 1
+        return persons
 
     def onContextChanged(self, key, value):
         if "Door" in key and value == "open":
