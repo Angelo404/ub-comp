@@ -5,11 +5,11 @@ import sqlite3
 sqlite_file = 'src/sqlite.db'    # name of the sqlite database file
 
 alarmtable = '''CREATE TABLE alarm
-       (id INT PRIMARY KEY     NOT NULL,
-       	time TEXT NOT NULL,
-       	repeat TEXT NOT NULL,
-       	user TEXT NOT NULL,
-       	track_uri TEXT
+       (ID INTEGER PRIMARY KEY AUTOINCREMENT,
+       	TIME INT NOT NULL,
+       	REPEAT INT NOT NULL,
+       	USER TEXT NOT NULL,
+       	TRACK_URI TEXT
        );'''
 
 
@@ -17,5 +17,5 @@ alarmtable = '''CREATE TABLE alarm
 db = sqlite3.connect(sqlite_file)
 c = db.cursor()
 c.execute(alarmtable)
-c.commit()
-c.close()
+db.commit()
+db.close()
