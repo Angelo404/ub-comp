@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+	<h1>List of alarms</h1>
+	<table >
+		<thead>
+			<tr>
+				<td> <b>id</b> </td>
+				<td> <b>time</b> </td>
+				<td> <b>repeat</b> </td>
+				<td> <b>user</b> </td>
+				<td> <b>track_uri</b> </td>
+			</tr>
+		</thead>
+		<tbody>
+		{% for alarm in alarms %}
+			<tr>
+				<td> {{ alarm.id }} </td>
+				<td> {{ alarm.time }} </td>
+				<td> {{ alarm.repeat }} </td>
+				<td> {{ alarm.user }} </td>
+				<td> {{ alarm.track_uri }} </td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

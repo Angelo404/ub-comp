@@ -8,6 +8,10 @@
 		<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.2.0.js') }}"></script> -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='jquery-ui-1.11.4/jquery-ui.min.css') }}">
+		<script src="{{ url_for('static', filename='jquery-ui-1.11.4/external/jquery/jquery.js') }}"></script>
+		<script src="{{ url_for('static', filename='jquery-ui-1.11.4/jquery-ui.min.js') }}"></script>
+		<script src= "{{ url_for('static', filename='js/jquery-ui-timepicker-addon.js')}}"></script>
 	</head>
 	<body>
 		<div class="header">
@@ -27,6 +31,7 @@
 					<div class="collapse navbar-collapse" id="js-navbar-collapse">
 						<ul class="nav navbar-nav">
 							<li><a href="/#/">Home</a></li>
+							<li><a href="/addalarm">Add alarm</a></li>
 						</ul>
 					</div>
 				</div>

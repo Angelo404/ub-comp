@@ -1,14 +1,16 @@
 #!/usr/bin/python
 
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, flash, redirect
 import sqlite3
-import time
+from time import strftime
 from datetime import datetime
 from threading import Timer
 import spotify
 import SpotifyPlayer
+from forms import AddAlarmForm
 
 app = Flask(__name__)
+app.config.from_object('config')
 
 # Because calling this directly on the object does not work for some magic
 # reason
@@ -34,7 +36,7 @@ class Alarm(object):
 
     def start_stored_alarms(self):
         for alarm in self.alarms:
-            Timer(1.0, play_track, [alarm['track_uri']]).start()
+        	print alarm
 
     def get_current_alarms_from_db(self):
         self.alarms = self.query_db(
@@ -55,10 +57,21 @@ class Alarm(object):
 
 @app.route("/")
 def root():
-    return render_template("addalarm.html")
+    return render_template("home.html", alarms=alarm.alarms)
+
+@app.route('/addalarm', methods=['GET', 'POST'])
+def addAlarm():
+    form = AddAlarmForm()
+    if form.validate_on_submit():
+        print form.track_uri.data + " " + form.user.data
+        flash('"%s", %s' %
+              (form.track_uri.data, str(form.user.data)))
+        return redirect('/')
+    return render_template('addalarm.html',
+                           form=form)
 
 # track_uri = 'spotify:track:0rCuRc07y6l1kPYj0JSRg5'
-# alarm = Alarm()
+alarm = Alarm()
 
 # Short test to see if Spotify is working in combination with Timer
 # t = Timer(1.0, play_track, [track_uri])
