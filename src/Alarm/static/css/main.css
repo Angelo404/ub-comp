@@ -82,6 +82,15 @@ body {
     font-style: italic;
 }
 
+table {
+  border-collapse: collapse;
+}
+
+td, th {
+    padding: 0.5rem;
+    text-align: left;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .container {

@@ -1,4 +1,27 @@
+<!-- extend base layout -->
 {% extends "layout.html" %}
 {% block body %}
-<p>Hello world from addalarm.html</p>
+	<h1>Add alarm</h1>
+	<form action="" method="post" name="addalarm">
+		{{ form.hidden_tag() }}
+		<p>
+			Please enter the track uri from Spotify:<br>
+			{{ form.track_uri(size=80) }}<br>
+			{% for error in form.track_uri.errors %}
+				<span style="color: red;">[{{ error }}]</span>
+			{% endfor %}<br>
+		</p>
+		<p>
+			Please select the user: {{ form.user }}
+		</p>
+		<p>
+			Repeat (seconds): {{ form.repeat }}
+		</p>
+		<!-- <p>
+						Enter a date: {{ form.datetime }}
+			<script type="text/javascript">$('#datetime').datetimepicker({
+			});</script>
+		</p> -->
+		<p><input type="submit" value="Add alarm"></p>
+	</form>
 {% endblock %}
