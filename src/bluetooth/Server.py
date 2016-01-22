@@ -5,6 +5,9 @@ from Bluetooth import Bluetooth
 from RcvDataThread import RcvDataThread
 import time
 import threading
+from urllib2 import Request,urlopen
+import logging
+
 
 class Server(Bluetooth):
 
@@ -30,7 +33,7 @@ class Server(Bluetooth):
 
 		self.socket.close()
 
-	def sendStateChange(key, value):
+	def sendStateChange(self, key, value):
 		request = Request("http://localhost:5000/API/update/{}/{}".format(key, value))
 		response = urlopen(request)
 		responseText = response.read()
@@ -63,9 +66,9 @@ class Server(Bluetooth):
 			#if person[0] in self.listOfPeople:
 				#print "FOUND" #TO DO
 		for person in listOfPeopleArrived:
-			pass#self.sendStateChange("Sensors:Devices:{}".format(person[0]), "present")
+			self.sendStateChange("Sensors:Devices:{}".format(person[0]), "present")
 		for person in listOfPeopleLeft:
-			pass # TO DO
+			self.sendStateChange("Sensors:Devices:{}".format(person[0]), "gone")
 				#if person left:
 					#call api Sensors:Devices:MACCC value: gone
 				#present:
