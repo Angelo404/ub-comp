@@ -5,7 +5,6 @@ import sqlite3
 from time import strftime
 from datetime import datetime
 from threading import Timer
-<<<<<<< HEAD
 import spotify
 import SpotifyPlayer
 from forms import AddAlarmForm
