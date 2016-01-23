@@ -5,13 +5,13 @@
 		<title>Ubiquitous Computing</title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width">
-		<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.2.0.js') }}"></script> -->
+		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='jquery-ui-1.11.4/jquery-ui.min.css') }}">
-		<script src="{{ url_for('static', filename='jquery-ui-1.11.4/external/jquery/jquery.js') }}"></script>
-		<script src="{{ url_for('static', filename='jquery-ui-1.11.4/jquery-ui.min.js') }}"></script>
-		<script src= "{{ url_for('static', filename='js/jquery-ui-timepicker-addon.js')}}"></script>
+
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+		<script src="{{ url_for('static', filename='js/alarm.js') }}"></script>
 	</head>
 	<body>
 		<div class="header">
@@ -37,9 +37,20 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="container">
-			{% block body %}{% endblock %}
-		</div>
-	</body>
+			<!-- Display flashed messages -->
+			{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				{%- for message in messages %}
+				<div class="alert alert-info">
+					<a href="#" class="close" data-dismiss="alert">&times;</a>
+					{{message}}
+				</div>
+			{% endfor -%}
+		{% endif %}
+	{% endwith %}
+	
+	{% block body %}{% endblock %}
+</div>
+</body>
 </html>

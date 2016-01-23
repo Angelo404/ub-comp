@@ -10,4 +10,4 @@ class AddAlarmForm(Form):
     track_uri = StringField('track_uri', validators=[DataRequired()])
     user = SelectField('user', choices=getChoices(), validators=[DataRequired()])
     repeat = IntegerField('repeat', validators=[DataRequired()])
-    # datetime = DateTimeField('datetimepicker', format='%d-%m-%Y %H:%M') # , validators=[DataRequired()]
+    datetime = DateTimeField(format='%Y-%m-%d %H:%M' , default=datetime.today, validators=[DataRequired()])

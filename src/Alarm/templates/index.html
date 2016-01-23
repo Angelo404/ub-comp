@@ -9,6 +9,7 @@
 				<td> <b>repeat</b> </td>
 				<td> <b>user</b> </td>
 				<td> <b>track_uri</b> </td>
+				<td> <b></b> </td>
 			</tr>
 		</thead>
 		<tbody>
@@ -19,6 +20,7 @@
 				<td> {{ alarm.repeat }} </td>
 				<td> {{ alarm.user }} </td>
 				<td> {{ alarm.track_uri }} </td>
+				<td> <a href={{ url_for('removeAlarm', alarmID=alarm.id)}}>Remove</a>
 			</tr>
 		{% endfor %}
 		</tbody>

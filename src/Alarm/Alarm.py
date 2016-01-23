@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from flask import Flask, render_template, flash, redirect
+from flask import Flask, render_template, flash, redirect, g
 import sqlite3
 from time import strftime
 from datetime import datetime
@@ -17,76 +17,105 @@ app.config.from_object('config')
 def play_track(track_uri):
     alarm.spotify.play_track(track_uri)
 
+def query_db(query, args=(), one=False):
+    cur = g.db.execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
+@app.before_request
+def before_request():
+    g.db = sqlite3.connect("../sqlite.db")
+    g.db.row_factory = sqlite3.Row
+
+@app.teardown_request
+def teardown_request(exception):
+    if hasattr(g, 'db'):
+        g.db.close()
+
 
 class Alarm(object):
 
     #alarms = []
-    #spotify = SpotifyPlayer.SpotifyPlayer()
-    #db = None
+    spotify = SpotifyPlayer.SpotifyPlayer()
 
-    def __init__(self):
+    # def __init__(self):
         # Needs to be replaced with something from the config file
-        self.connect_to_db('../sqlite.db')
-        self.c = self.db.cursor()
-        #self.get_current_alarms_from_db()
+        # self.connect_to_db('../sqlite.db')
+        # self.c = self.db.cursor()
+        # before_request()
+        # self.get_current_alarms_from_db()
         # TODO needs something to restart the timers
 
-    def connect_to_db(self, path):
-        self.db = sqlite3.connect(path)
-        self.db.row_factory = sqlite3.Row
-
     def createEntry(self, time, repeat, user, track):
-        self.c.execute("INSERT INTO alarm VALUES (NULL, ?, ?, ?, ?)", (time, repeat, user, track))
-        self.db.commit()
+        print str(time) + " " + str(repeat) + " " + str(user) + " " + str(track)
+        g.db.execute("INSERT INTO alarm VALUES (NULL, ?, ?, ?, ?)", (time, repeat, user, track))
+        g.db.commit()
 
     def updateRow(self, alarmID):
-        self.c.execute("SELECT TIME FROM alarm WHERE ID = ?", (alarmID,))
+        g.db.execute("SELECT TIME FROM alarm WHERE ID = ?", (alarmID,))
         tmpAlarmTime = self.c.fetchone()[0]
-        self.c.execute("SELECT REPEAT FROM alarm WHERE ID = ?", (alarmID,))
+        g.db.execute("SELECT REPEAT FROM alarm WHERE ID = ?", (alarmID,))
         tmpAlarmRep = self.c.fetchone()[0]
-        self.c.execute("UPDATE alarm SET TIME=? WHERE ID=?", (tmpAlarmTime+tmpAlarmRep, alarmID))
-        self.db.commit()
+        g.db.execute("UPDATE alarm SET TIME=? WHERE ID=?", (tmpAlarmTime+tmpAlarmRep, alarmID))
+        g.db.commit()
+
+    def removeAlarmByID(self, alarmID):
+        g.db.execute("DELETE FROM alarm WHERE ID = ?", (alarmID,))
+        g.db.commit()
+
+    def isValidID(self, alarmID):
+        res = g.db.execute("SELECT id FROM alarm WHERE ID = ?", (alarmID,)).fetchone()
+        return res != None
+
+    def getAllAlarms(self):
+        return query_db("SELECT * FROM alarm")
 
     def printDB(self):
-        self.c.execute("SELECT * FROM alarm")
-        print(self.c.fetchall())
+        print self.getAllAlarms()
 
     def start_stored_alarms(self):
         for alarm in self.alarms:
-        	print alarm
+            print alarm
 
     def get_current_alarms_from_db(self):
-        self.alarms = self.query_db(
-            "SELECT * FROM alarm WHERE repeat > 0 OR time > "+str(int(time.time())))
+        self.alarms = g.db.execute(
+            "SELECT * FROM alarm WHERE repeat > 0 OR time > "+str(int(time.time()))).fetchall()
         self.start_stored_alarms()
-
-    def query_db(self, query, args=(), one=False):
-        cur = self.db.execute(query, args)
-        rv = cur.fetchall()
-        print(rv)
-        cur.close()
-        #return (rv[0] if rv else None) if one else rv
-
-    def playtrack(self):
-        play_track('spotify:track:0HJRAM7Gt9jXskuXjZeFX3')
 
     def play_track(self, track_uri):
         spotify.play_track(track_uri)
 
-#@app.route("/")
-def root():
-    return render_template("home.html", alarms=alarm.alarms)
+
+@app.route("/alarm/remove/<int:alarmID>")
+def removeAlarm(alarmID):
+    if alarm.isValidID(alarmID):
+        flash('Alarm removed')
+        alarm.removeAlarmByID(alarmID)
+    else:
+        flash('Alarm ID was not valid')
+    return redirect('/')
+
+@app.route("/")
+def index():
+    tmp = alarm.getAllAlarms()
+    print tmp[0]['id']
+    return render_template("index.html", alarms=tmp)
 
 @app.route('/addalarm', methods=['GET', 'POST'])
 def addAlarm():
     form = AddAlarmForm()
+    print form.datetime.data
     if form.validate_on_submit():
-        print form.track_uri.data + " " + form.user.data
-        flash('"%s", %s' %
-              (form.track_uri.data, str(form.user.data)))
+        alarm.createEntry(
+            form.datetime.data,
+            form.repeat.data,
+            form.user.data,
+            form.track_uri.data
+        )
+        flash('Alarm was added')
         return redirect('/')
-    return render_template('addalarm.html',
-                           form=form)
+    return render_template('addalarm.html', form=form)
 
 # track_uri = 'spotify:track:0rCuRc07y6l1kPYj0JSRg5'
 alarm = Alarm()
@@ -97,13 +126,13 @@ alarm = Alarm()
 # t.start()
 
 if __name__ == "__main__":
-    #app.run(debug=True)
-    a = Alarm()
+    app.run(debug=True)
+    # a = Alarm()
     #a.createEntry(str(int(time.time())), str(3600), "angelo333", "some track")
     #a.createEntry(str(int(time.time())), str(5500), "angelo222", "some track")
-    a.printDB()
-    print("**")
-    a.updateRow(1)
+    # a.printDB()
+    # print("**")
+    # a.updateRow(1)
     #a.get_current_alarms_from_db()
 
 
