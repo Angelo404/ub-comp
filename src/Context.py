@@ -1,5 +1,7 @@
 import os
 import threading
+from datetime import datetime
+
 
 from src import SpotifyPlayer
 
@@ -10,6 +12,7 @@ class Context:
         self.state = {}
         self.stateLock = threading.Lock()
         self.spotify = SpotifyPlayer.SpotifyPlayer()
+        self.update("Actuators:Lights:Desk", "off")
 
     def update(self, key, value):
         with self.stateLock:
@@ -31,6 +34,7 @@ class Context:
         self.update("Actuators:Lights:Desk", "on")
 
     def sunRised(self):
+        print "Checking state of sun"
         # with no information assume it is dark
         if not self.state.has_key("Sensors:Sun:Rise"):
             return False
@@ -39,11 +43,15 @@ class Context:
         sunRise = datetime.strptime(self.state["Sensors:Sun:Rise"], "%Y-%m-%dT%H:%M:%S")
         sunSet = datetime.strftime(self.state["Sensors:Sun:Set"], "%Y-%m-%dT%H:%M:%S")
         now = datetime.now()
+        print "Returning..."
         return sunRise < now < sunSet
 
     def onDoorOpened(self):
+        print "OnDoorOpened..."
         lightOn = self.state["Actuators:Lights:Desk"] == "on"
+        print "LightOn: {}".format(lightOn)
         sun_is_shining = self.sunRised()
+        print "Sun shining: {}".format(sun_is_shining)
         if not lightOn and not sun_is_shining and self.number_of_persons_in_room() > 0:
             self.enable_light()
 
