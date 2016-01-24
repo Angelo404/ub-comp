@@ -1,7 +1,7 @@
 import os
 import threading
-import spotify
-import SpotifyPlayer
+
+from src import SpotifyPlayer
 
 
 class Context:

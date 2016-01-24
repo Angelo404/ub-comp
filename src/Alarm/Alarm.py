@@ -1,24 +1,31 @@
 #!/usr/bin/python
 
-from flask import Flask, render_template, flash, redirect, g
 import sqlite3
 import time
-from time import strftime
-from datetime import datetime
 from threading import Timer
-import spotify
-import SpotifyPlayer
+from urllib2 import Request,urlopen
+
+from flask import Flask, render_template, flash, redirect, g
+
 from forms import AddAlarmForm
 
 app = Flask(__name__)
 app.config.from_object('config')
 
+def sendStateChange(key, value):
+    request = Request("http://localhost:5000/API/update/{}/{}".format(key, value))
+    response = urlopen(request)
+    responseText = response.read()
+    print responseText
+
+
 # Because calling this directly on the object does not work for some magic
 # reason
 def play_track(track_uri, alarmID):
-    if alarm.spotify.isPlaying():
-        alarm.spotify.stopPlaying()
-    alarm.spotify.play_track(track_uri)
+    # if alarm.spotify.isPlaying():
+    #     alarm.spotify.stopPlaying()
+    # alarm.spotify.play_track(track_uri)
+    sendStateChange("Sensors:Alarms:{}".format(alarmID), "fire")
     timeBeforeAlarm = alarm.updateRow(alarmID, g.db)
     if timeBeforeAlarm > 0:
         t = Timer(timeBeforeAlarm, play_track, [track_uri, alarmID])
@@ -28,7 +35,7 @@ def play_track(track_uri, alarmID):
 class Alarm(object):
 
     runningAlarms = []
-    spotify = SpotifyPlayer.SpotifyPlayer()
+    # spotify = SpotifyPlayer.SpotifyPlayer()
 
     def __init__(self):
         # Manual creation of database connection due to no request
@@ -86,8 +93,8 @@ class Alarm(object):
         return g.db.execute(
             "SELECT * FROM alarm WHERE repeat > 0 OR time > "+str(int(time.time()))).fetchall()
 
-    def play_track(self, track_uri):
-        spotify.play_track(track_uri)
+    # def play_track(self, track_uri):
+    #     spotify.play_track(track_uri)
 
 
 alarm = Alarm()
