@@ -48,7 +48,6 @@ class Alarm(object):
         # TODO needs something to restart the timers
 
     def createEntry(self, time, repeat, user, track):
-        print str(time) + " " + str(repeat) + " " + str(user) + " " + str(track)
         g.db.execute("INSERT INTO alarm VALUES (NULL, ?, ?, ?, ?)", (time, repeat, user, track))
         g.db.commit()
 
@@ -98,14 +97,11 @@ def removeAlarm(alarmID):
 
 @app.route("/")
 def index():
-    tmp = alarm.getAllAlarms()
-    print tmp[0]['id']
-    return render_template("index.html", alarms=tmp)
+    return render_template("index.html", alarms=alarm.getAllAlarms())
 
 @app.route('/addalarm', methods=['GET', 'POST'])
 def addAlarm():
     form = AddAlarmForm()
-    print form.datetime.data
     if form.validate_on_submit():
         alarm.createEntry(
             form.datetime.data,
