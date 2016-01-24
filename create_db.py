@@ -4,13 +4,13 @@ import sqlite3
 
 sqlite_file = 'src/sqlite.db'    # name of the sqlite database file
 
-alarmtable = '''CREATE TABLE alarm
-       (ID INTEGER PRIMARY KEY AUTOINCREMENT,
-       	TIME INT NOT NULL,
-       	REPEAT INT NOT NULL,
-       	USER TEXT NOT NULL,
-       	TRACK_URI TEXT
-       );'''
+alarmtable = '''CREATE TABLE `alarm` (
+	`id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	`time`	NUMERIC NOT NULL,
+	`repeat`	INTEGER NOT NULL,
+	`user`	TEXT,
+	`track_uri`	TEXT
+);'''
 
 
 
