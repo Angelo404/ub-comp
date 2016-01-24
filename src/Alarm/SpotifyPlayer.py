@@ -50,9 +50,13 @@ class SpotifyPlayer(object):
     def on_end_of_track(self):
         self.end_of_track.set()
 
+    def stopPlaying(self):
+        self.session.player.unload()
+
     # Play a track
     def play_track(self, track_uri):
         track = self.session.get_track(track_uri).load()
+        self.session.player.unload()
         self.session.player.load(track)
         self.session.player.play()
 
