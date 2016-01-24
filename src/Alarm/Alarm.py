@@ -36,16 +36,7 @@ def teardown_request(exception):
 
 class Alarm(object):
 
-    #alarms = []
     spotify = SpotifyPlayer.SpotifyPlayer()
-
-    # def __init__(self):
-        # Needs to be replaced with something from the config file
-        # self.connect_to_db('../sqlite.db')
-        # self.c = self.db.cursor()
-        # before_request()
-        # self.get_current_alarms_from_db()
-        # TODO needs something to restart the timers
 
     def createEntry(self, time, repeat, user, track):
         g.db.execute("INSERT INTO alarm VALUES (NULL, ?, ?, ?, ?)", (time, repeat, user, track))
