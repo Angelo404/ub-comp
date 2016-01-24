@@ -5,7 +5,7 @@ from datetime import datetime
 
 class AddAlarmForm(Form):
     def getChoices():
-    	return [('1','user1'), ('2','user2')]
+        return [('1','user1'), ('2','user2')]
 
     track_uri = StringField('track_uri', validators=[DataRequired()])
     user = SelectField('user', choices=getChoices(), validators=[DataRequired()])
