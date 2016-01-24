@@ -8,5 +8,5 @@ alarmtable = '''insert into alarm (time, repeat, user, track_uri) values \
 db = sqlite3.connect(sqlite_file)
 c = db.cursor()
 c.execute(alarmtable)
-c.commit()
-c.close
+db.commit()
+db.close()

@@ -13,33 +13,6 @@ from forms import AddAlarmForm
 app = Flask(__name__)
 app.config.from_object('config')
 
-# Because calling this directly on the object does not work for some magic
-# reason
-def play_track(track_uri, alarmID):
-    alarm.spotify.play_track(track_uri)
-    timeBeforeAlarm = alarm.updateRow(alarmID, g.db)
-    if timeBeforeAlarm > 0:
-        t = Timer(timeBeforeAlarm, play_track, [track_uri, alarmID])
-        alarm.runningAlarms.append(t)
-        t.start()
-
-def query_db(query, args=(), one=False):
-    cur = g.db.execute(query, args)
-    rv = cur.fetchall()
-    cur.close()
-    return (rv[0] if rv else None) if one else rv
-
-@app.before_request
-def before_request():
-    g.db = sqlite3.connect("../sqlite.db")
-    g.db.row_factory = sqlite3.Row
-
-@app.teardown_request
-def teardown_request(exception):
-    if hasattr(g, 'db'):
-        g.db.close()
-
-
 class Alarm(object):
 
     runningAlarms = []
@@ -50,7 +23,7 @@ class Alarm(object):
         db = sqlite3.connect("../sqlite.db")
         db.row_factory = sqlite3.Row
         alarms = db.execute("SELECT * FROM alarm WHERE repeat > 0 OR time > "+str(int(time.time()))).fetchall()
-        print alarms
+
         for alarm in alarms:
             timeBeforeAlarm = self.updateRow(alarm['id'], db)
             t = Timer(timeBeforeAlarm, play_track, [alarm['track_uri'], alarm['id']])
@@ -68,7 +41,7 @@ class Alarm(object):
     def updateRow(self, alarmID, db):
         tmpAlarmTime = db.execute("SELECT TIME FROM alarm WHERE ID = ?", (alarmID,)).fetchone()['time']
         tmpAlarmRep = db.execute("SELECT REPEAT FROM alarm WHERE ID = ?", (alarmID,)).fetchone()['repeat']
-
+        
         if tmpAlarmRep > 0:
             while tmpAlarmTime < time.time():
                 tmpAlarmTime = tmpAlarmTime + tmpAlarmRep
@@ -104,6 +77,32 @@ class Alarm(object):
     def play_track(self, track_uri):
         spotify.play_track(track_uri)
 
+
+# Because calling this directly on the object does not work for some magic
+# reason
+def play_track(track_uri, alarmID):
+    alarm.spotify.play_track(track_uri)
+    timeBeforeAlarm = alarm.updateRow(alarmID, g.db)
+    if timeBeforeAlarm > 0:
+        t = Timer(timeBeforeAlarm, play_track, [track_uri, alarmID])
+        alarm.runningAlarms.append(t)
+        t.start()
+
+def query_db(query, args=(), one=False):
+    cur = g.db.execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
+@app.before_request
+def before_request():
+    g.db = sqlite3.connect("../sqlite.db")
+    g.db.row_factory = sqlite3.Row
+
+@app.teardown_request
+def teardown_request(exception):
+    if hasattr(g, 'db'):
+        g.db.close()
 
 @app.route("/alarm/remove/<int:alarmID>")
 def removeAlarm(alarmID):
@@ -142,7 +141,8 @@ alarm = Alarm()
 # t.start()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+   app.run(debug=True)
+    # app.run(host='0.0.0.0')
     # a = Alarm()
     #a.createAlarm(str(int(time.time())), str(3600), "angelo333", "some track")
     #a.createAlarm(str(int(time.time())), str(5500), "angelo222", "some track")
