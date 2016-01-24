@@ -39,6 +39,14 @@ class Context:
         if not lightOn and not sun_is_shining and self.number_of_persons_in_room() > 0:
             self.enable_light()
 
+    def getPresentDevices(self):
+        persons = []
+        for key in self.state.keys():
+            if "Sensors:Devices:" in key:
+                if self.state[key] == "present":
+                    persons.append(self.state[key])
+        return persons
+
     def number_of_persons_in_room(self):
         persons = 0
         for key in self.state.keys():
