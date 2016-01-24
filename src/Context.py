@@ -1,5 +1,7 @@
 import os
 import threading
+import spotify
+import SpotifyPlayer
 
 
 class Context:
@@ -7,6 +9,7 @@ class Context:
     def __init__(self):
         self.state = {}
         self.stateLock = threading.Lock()
+        self.spotify = SpotifyPlayer.SpotifyPlayer()
 
     def update(self, key, value):
         with self.stateLock:
@@ -16,7 +19,12 @@ class Context:
         self.printContext()
 
     def play_sound(self):
-        os.system("aplay /home/pi/police_s.wav")
+        if self.spotify.isPlaying():
+            self.spotify.stopPlaying()
+        track_uri = 'spotify:track:0rCuRc07y6l1kPYj0JSRg5'
+
+        self.spotify.play_track(track_uri)
+
 
     def enable_light(self):
         os.system("sudo /home/pi/bin/elro 2 B on")
@@ -58,6 +66,8 @@ class Context:
     def onContextChanged(self, key, value):
         if "Door" in key and value == "open":
             self.onDoorOpened()
+        if "Alarms:" in key and value == "fire":
+            self.play_sound()
 
     def printContext(self):
         print "State: {}".format(self.state)
