@@ -2,11 +2,15 @@ from urllib2 import Request,urlopen
 import logging
 import json
 import time
+import urllib
 from datetime import datetime
 
 def sendStateChange(key, value):
+    value = str(value)
+    value = str.replace(value, " ", "+")
     print "Updating {}/{}".format(key,value)
-    request = Request("http://localhost:5000/API/update/{}/{}".format(key, value))
+    callUrl = "http://localhost:5000/API/update/{}/{}".format(key, value)
+    request = Request(callUrl)
     response = urlopen(request)
     responseText = response.read()
     logging.debug(responseText)

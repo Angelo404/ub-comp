@@ -2,8 +2,7 @@ import os
 import threading
 from datetime import datetime
 
-
-from src import SpotifyPlayer
+# import SpotifyPlayer
 
 
 class Context:
@@ -11,10 +10,12 @@ class Context:
     def __init__(self):
         self.state = {}
         self.stateLock = threading.Lock()
-        self.spotify = SpotifyPlayer.SpotifyPlayer()
+        # self.spotify = SpotifyPlayer.SpotifyPlayer()
         self.update("Actuators:Lights:Desk", "off")
 
     def update(self, key, value):
+        value = str(value)
+        value = str.replace(value, "+", " ")
         with self.stateLock:
             self.state[key] = value
 
@@ -30,6 +31,7 @@ class Context:
 
 
     def enable_light(self):
+        print "Turn on light!"
         os.system("sudo /home/pi/bin/elro 2 B on")
         self.update("Actuators:Lights:Desk", "on")
 
@@ -40,10 +42,11 @@ class Context:
             return False
         if not self.state.has_key("Sensors:Sun:Set"):
             return False
-        sunRise = datetime.strptime(self.state["Sensors:Sun:Rise"], "%Y-%m-%dT%H:%M:%S")
-        sunSet = datetime.strftime(self.state["Sensors:Sun:Set"], "%Y-%m-%dT%H:%M:%S")
+        riseTime = str(self.state["Sensors:Sun:Rise"])
+        setTime = str(self.state["Sensors:Sun:Set"])
+        sunRise = datetime.strptime(riseTime, "%Y-%m-%d %H:%M:%S")
+        sunSet = datetime.strptime(setTime, "%Y-%m-%d %H:%M:%S")
         now = datetime.now()
-        print "Returning..."
         return sunRise < now < sunSet
 
     def onDoorOpened(self):
@@ -65,10 +68,12 @@ class Context:
 
     def number_of_persons_in_room(self):
         persons = 0
+        print "Checking persons in room"
         for key in self.state.keys():
             if "Sensors:Devices:" in key:
                 if self.state[key] == "present":
                     persons += 1
+        print "Persons {}".format(persons)
         return persons
 
     def onContextChanged(self, key, value):
